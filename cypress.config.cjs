@@ -40,7 +40,7 @@ module.exports = defineConfig({
 	component: {
 		devServer: {
 			framework: "vue",
-			bundler: "webpack",
+			bundler: "vite",
 		},
 	},
 	retries: {
