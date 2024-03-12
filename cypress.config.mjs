@@ -3,7 +3,6 @@ import cypressSplit from 'cypress-split'
 import { configureVisualRegression } from 'cypress-visual-regression/dist/plugin.js'
 import browserify from '@cypress/browserify-preprocessor'
 import webpack from '@cypress/webpack-preprocessor'
-import webpackOptions from '@nextcloud/webpack-vue-config'
 
 
 export default defineConfig({
@@ -26,10 +25,9 @@ export default defineConfig({
 			cypressSplit(on, config)
 			configureVisualRegression(on)
 
-			webpackOptions.module.rules.push({ test: /\.md/, type: 'asset/source' })
 
-			on('file:preprocessor', browserify())
-			on('file:preprocessor', webpack({ webpackOptions }))
+			//on('file:preprocessor', browserify())
+			//on('file:preprocessor', webpack())
 
 			return config
 		},
