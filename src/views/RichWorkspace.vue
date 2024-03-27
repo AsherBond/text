@@ -291,6 +291,37 @@ export default {
 		margin: 0;
 	}
 
+	#rich-workspace:deep(.table-wrapper .content) {
+		table-layout: auto;
+
+		tr {
+			max-height: 300px;
+
+			th {
+				padding: 4px;
+
+				div {
+					width: 100%;
+				}
+
+				.action-item div {
+					display: flex;
+					justify-content: flex-end;
+				}
+			}
+
+			th, td {
+				flex-grow: 1;
+
+				.content {
+					word-break: break-word;
+					width: 100%;
+					height: 150px;
+				}
+			}
+		}
+	}
+
 	#rich-workspace:deep(.editor__content) {
 		margin: 0;
 	}
