@@ -27,6 +27,7 @@
 		:active="active || isEmbedded"
 		:autofocus="autofocus"
 		:share-token="shareToken"
+		:class="{ 'text-editor--embedding': isEmbedded }"
 		:mime="mime"
 		:show-outline-outside="showOutlineOutside" />
 	<div v-else
@@ -179,6 +180,10 @@ export default {
 			margin-left: auto;
 			margin-right: 0;
 		}
+	}
+
+	&.text-editor--embedding {
+		min-height: 400px;
 	}
 
 }
