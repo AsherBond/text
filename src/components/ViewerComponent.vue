@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import axios from '@nextcloud/axios'
 import PencilIcon from 'vue-material-design-icons/Pencil.vue'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
@@ -57,10 +58,10 @@ import getEditorInstance from './Editor.singleton.js'
 export default {
 	name: 'ViewerComponent',
 	components: {
-		NcButton,
-		PencilIcon,
-		RichTextReader,
-		PlainTextReader,
+		NcButton: Vue.extend(NcButton),
+		PencilIcon: Vue.extend(PencilIcon),
+		RichTextReader: Vue.extend(RichTextReader),
+		PlainTextReader: Vue.extend(PlainTextReader),
 		Editor: getEditorInstance,
 	},
 	provide() {
