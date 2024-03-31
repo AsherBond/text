@@ -35,9 +35,6 @@ describe('Test state loading of documents', function() {
 	})
 	beforeEach(function() {
 		cy.login(user)
-		cy.intercept({ method: 'POST', url: '**/session/*/push' }).as('push')
-		cy.intercept({ method: 'POST', url: '**/session/*/sync' }).as('sync')
-		cy.intercept({ method: 'POST', url: '**/session/*/save' }).as('save')
 	})
 
 	it('Initial content can not be undone', function() {
@@ -62,11 +59,13 @@ describe('Test state loading of documents', function() {
 	it('Consecutive sessions work properly', function() {
 		let readToken = null
 		let writeToken = null
+		cy.interceptCreate()
 		cy.shareFile('/test2.md')
 			.then((token) => {
 				readToken = token
 				cy.logout()
 				cy.visit(`/s/${readToken}`)
+				cy.wait('@create')
 			})
 			.then(() => {
 				// Open read only for the first time
@@ -74,6 +73,7 @@ describe('Test state loading of documents', function() {
 				cy.getContent()
 					.should('contain', 'Hello world')
 					.find('h2').should('contain', 'Hello world')
+				cy.closeInterceptedSession(readToken)
 
 				// Open read only for the second time
 				cy.reload()
@@ -81,6 +81,7 @@ describe('Test state loading of documents', function() {
 				cy.getContent()
 					.should('contain', 'Hello world')
 					.find('h2').should('contain', 'Hello world')
+				cy.closeInterceptedSession(readToken)
 
 				cy.login(user)
 				cy.shareFile('/test2.md', { edit: true })
@@ -94,15 +95,17 @@ describe('Test state loading of documents', function() {
 							.find('h2').should('contain', 'Hello world')
 						cy.getContent()
 							.type('Something new {end}')
+						cy.intercept({ method: 'POST', url: '**/session/*/push' }).as('push')
+						cy.intercept({ method: 'POST', url: '**/session/*/sync' }).as('sync')
 						cy.wait('@push')
 						cy.wait('@sync')
+						cy.closeInterceptedSession(writeToken)
 
 						// Reopen read only link and check if changes are there
 						cy.visit(`/s/${readToken}`)
 						cy.getEditor().should('be.visible')
 						cy.getContent()
 							.find('h2').should('contain', 'Something new Hello world')
-
 					})
 			})
 	})
@@ -125,6 +128,7 @@ describe('Test state loading of documents', function() {
 				cy.getContent()
 					.type('Something new {end}')
 				cy.get('.save-status button').click()
+				cy.intercept({ method: 'POST', url: '**/session/*/save' }).as('save')
 				cy.wait('@save')
 
 				// Open read only for the second time
